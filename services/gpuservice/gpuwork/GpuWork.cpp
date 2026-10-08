@@ -68,10 +68,8 @@ template <class Key, class Value>
 bool getBpfMap(const char* mapPath, bpf::BpfMap<Key, Value>* out) {
     errno = 0;
 
-    // Note: BpfMap ctor calls abort() on failure, so use init() instead.
-
-    bpf::BpfMap<Key, Value> map;
-    if (!map.init(mapPath).ok()) {
+    auto result = out->init(mapPath);
+    if (!result.ok()) {
         ALOGW("Failed to create bpf map from %s [%d(%s)]", mapPath, errno, strerror(errno));
         return false;
     }
